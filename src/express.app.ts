@@ -59,9 +59,7 @@ class Server {
   private routes() {
     let router: express.Router;
     router = express.Router();
-
     new IndexRoute(router);
-
     this.app.use(router);
   }
 }
