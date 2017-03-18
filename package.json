@@ -1,0 +1,43 @@
+{
+  "name": "kartoffelstampf-server",
+  "description": "stampf it!",
+  "version": "0.0.1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codeclou/kartoffelstampf-server.git"
+  },
+  "scripts": {
+    "build:ts": "./node_modules/.bin/tsc",
+    "start": "npm run build:ts && node ./dist/express.server.js",
+    "lint": "./node_modules/.bin/tslint ./src/*"
+  },
+  "dependencies": {
+    "body-parser": "~1.16.0",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.0",
+    "express": "~4.14.1",
+    "file-type": "^4.1.0",
+    "morgan": "~1.7.0",
+    "multer": "^1.3.0",
+    "pug": "^2.0.0-beta11",
+    "read-chunk": "^2.0.0",
+    "serve-favicon": "~2.3.2",
+    "ws": "^2.2.0"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.16.0",
+    "@types/cookie-parser": "^1.3.30",
+    "@types/errorhandler": "0.0.30",
+    "@types/method-override": "0.0.29",
+    "@types/morgan": "^1.7.32",
+    "@types/serve-favicon": "^2.2.28",
+    "@types/ws": "0.0.39",
+    "pre-commit": "^1.2.2",
+    "tslint": "^4.5.1",
+    "typescript": "^2.2.1"
+  },
+  "pre-commit": [
+    "lint"
+  ]
+}
