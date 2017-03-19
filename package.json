@@ -8,8 +8,11 @@
     "url": "https://github.com/codeclou/kartoffelstampf-server.git"
   },
   "scripts": {
+    "build": "npm run build:ts && npm run build:pckg",
+    "build:pckg": "cp package.json dist/",
     "build:ts": "./node_modules/.bin/tsc",
     "start": "npm run build:ts && node ./dist/express.server.js",
+    "start:prod": "node ./express.server.js",
     "lint": "./node_modules/.bin/tslint ./src/*"
   },
   "dependencies": {
