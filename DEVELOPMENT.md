@@ -10,3 +10,8 @@ npm start
 Enable tslint in IntelliJ
 
 ![](https://codeclou.github.io/kartoffelstampf-server/doc/tslint-intellij.png)
+
+
+### Testing
+
+TODO: http://autobahn.ws/testsuite/
