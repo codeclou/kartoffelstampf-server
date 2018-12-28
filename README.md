@@ -2,8 +2,6 @@
 
 Microservice of Kartoffelstampf Project that executes the CLI Image Processing and provides a WebSocket API
 
-![](https://api.travis-ci.org/codeclou/kartoffelstampf-server.svg?branch=master)
-
 -----
 
 &nbsp;
