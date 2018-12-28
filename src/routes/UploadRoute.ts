@@ -8,7 +8,7 @@ import { ImageUploadRequest } from '../data/ImageUploadRequest';
 import * as fs from 'fs';
 import * as crypto from 'crypto';
 
-class IndexRoute {
+class UploadRoute {
 
   constructor(router: Router) {
     const self = this;
@@ -35,11 +35,11 @@ class IndexRoute {
   private upload(req: Request, res: Response, next: NextFunction) {
     const upload = req.body as ImageUploadRequest;
     const fileContentAsBinary = Buffer.from(upload.fileContent, 'base64');
-    const filePath = '/u/' + this.randomHash() + this.extensionFromType(upload.fileType);
-    fs.writeFileSync(filePath, fileContentAsBinary);
+    const fileName = this.randomHash() + this.extensionFromType(upload.fileType);
+    fs.writeFileSync('/u/' + fileName, fileContentAsBinary);
     res.send(JSON.stringify({
-      filePath: filePath
+      fileName: fileName
     }));
   }
 }
-export default IndexRoute;
+export default UploadRoute;

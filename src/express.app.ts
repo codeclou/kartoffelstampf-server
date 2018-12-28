@@ -5,11 +5,14 @@
  */
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
+import * as cors from 'cors';
 import * as express from 'express';
 import * as logger from 'morgan';
 import * as path from 'path';
 import * as favicon from 'serve-favicon';
+
 import GenericError from './error/GenericError';
+import DownloadRoute from './routes/DownloadRoute';
 import IndexRoute from './routes/IndexRoute';
 import UploadRoute from './routes/UploadRoute';
 
@@ -24,10 +27,11 @@ class Server {
     // INIT
     this.app.set('views', path.join(__dirname, '../views'));
     this.app.set('view engine', 'pug');
+    this.app.use(cors());
     this.app.use(favicon(path.join(__dirname, '../public', 'favicon.ico')));
     this.app.use(logger('dev'));
-    this.app.use(bodyParser.json());
-    this.app.use(bodyParser.urlencoded({ extended: false }));
+    this.app.use(bodyParser.json({limit: '200mb'}));
+    this.app.use(bodyParser.urlencoded({ extended: false}));
     this.app.use(cookieParser());
     this.app.use(express.static(path.join(__dirname, '../public')));
 
@@ -62,6 +66,7 @@ class Server {
     router = express.Router();
     new IndexRoute(router);
     new UploadRoute(router);
+    new DownloadRoute(router);
     this.app.use(router);
   }
 }

@@ -14,6 +14,12 @@ Microservice of Kartoffelstampf Project that executes the CLI Image Processing a
 
 &nbsp;
 
+#### GET /download/:fileName
+
+ * Download a compressed file. e.g. /download/aef678.png
+
+&nbsp;
+
 #### POST /upload
 
  * Upload a JPG or PNG as BASE64 encoded string and returns the file path on the server.
@@ -31,7 +37,7 @@ RESPONSE-BODY
 
 ```
 {
-  "filePath": "/u/a67876987098768.jpg"
+  "fileName": "a67876987098768.jpg"
 }
 ```
 &nbsp;
@@ -48,7 +54,7 @@ ws.onopen = function (event) {
     command: 'optipng',
     commandArguments: [
       '-o5',
-      '/test/test.png'
+      '/u/test.png'
     ]
   }));
 };
@@ -66,7 +72,7 @@ ws.onopen = function (event) {
     command: 'jpegoptim',
     commandArguments: [
       '-m80',
-      '/test/test.jpg'
+      '/u/test.jpg'
     ]
   }));
 };

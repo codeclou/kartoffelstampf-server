@@ -82,6 +82,8 @@ class WebSocketCommandService {
           },
           type: 'processStatus',
         }));
+        // close after command is done
+        ws.close();
       } catch (error) {
         winston.log('debug', 'failed to send ws', error);
       }

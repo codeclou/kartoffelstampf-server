@@ -16,8 +16,10 @@
     "lint": "./node_modules/.bin/tslint ./src/*"
   },
   "dependencies": {
+    "@types/cors": "^2.8.4",
     "body-parser": "~1.16.0",
     "cookie-parser": "~1.4.3",
+    "cors": "^2.8.5",
     "debug": "~2.6.0",
     "express": "~4.14.1",
     "file-type": "^4.1.0",

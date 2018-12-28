@@ -5,6 +5,6 @@
  */
 export class ImageUploadResponse {
 
-  public filePath: string;
+  public fileName: string;
 
 }
