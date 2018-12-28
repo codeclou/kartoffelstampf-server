@@ -1,7 +1,7 @@
 {
   "name": "kartoffelstampf-server",
   "description": "stampf it!",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "MIT",
   "repository": {
     "type": "git",
