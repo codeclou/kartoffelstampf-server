@@ -3,9 +3,8 @@
  * Copyright (c) 2017 Bernhard Grünewaldt
  * https://github.com/codeclou/kartoffelstampf-server
  */
-export class CommandInstruction {
+export class ImageUploadResponse {
 
-  public command: string = 'optipng';
-  public commandArguments: string[] = [];
+  public filePath: string;
 
 }

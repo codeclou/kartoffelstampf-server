@@ -9,7 +9,7 @@ import * as url from 'url';
 import * as winston from 'winston';
 import * as WebSocket from 'ws';
 import { IServerOptions, Server as WsServer } from 'ws';
-import CommandInstruction from '../data/CommandInstruction';
+import { CommandInstruction } from '../data/CommandInstruction';
 
 class WebSocketCommandService {
 
@@ -37,6 +37,18 @@ class WebSocketCommandService {
 
   private dispatchCommandWithWebsocketResponse(ws: WebSocket, commandInstruction: CommandInstruction) {
     const cmd = spawn(commandInstruction.command, commandInstruction.commandArguments);
+    cmd.on('error', (error: any) => {
+      try {
+        ws.send(JSON.stringify({
+          payload: {
+            text: error.toString(),
+          },
+          type: 'stderr',
+        }));
+      } catch (error) {
+        winston.log('debug', 'failed to send ws', error);
+      }
+    });
     cmd.stdout.on('data', (data: any) => {
       try {
         ws.send(JSON.stringify({

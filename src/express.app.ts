@@ -11,6 +11,7 @@ import * as path from 'path';
 import * as favicon from 'serve-favicon';
 import GenericError from './error/GenericError';
 import IndexRoute from './routes/IndexRoute';
+import UploadRoute from './routes/UploadRoute';
 
 class Server {
 
@@ -60,6 +61,7 @@ class Server {
     let router: express.Router;
     router = express.Router();
     new IndexRoute(router);
+    new UploadRoute(router);
     this.app.use(router);
   }
 }
