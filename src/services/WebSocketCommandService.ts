@@ -57,12 +57,15 @@ export class WebSocketCommandService {
         // Interpret which command to execute => Prevent XSS Injects!
         const compressInstruction = JSON.parse(message) as CompressInstruction;
         const commandInstruction = this.compressCommandInstruction(compressInstruction);
-        self.dispatchCommandWithWebsocketResponse(ws, commandInstruction);
+        self.dispatchCommandWithWebsocketResponse(ws, commandInstruction, compressInstruction);
       });
     });
   }
 
-  private dispatchCommandWithWebsocketResponse(ws: WebSocket, commandInstruction: CommandInstruction) {
+  private dispatchCommandWithWebsocketResponse(
+    ws: WebSocket,
+    commandInstruction: CommandInstruction,
+    compressInstruction: CompressInstruction) {
     const cmd = spawn(commandInstruction.command, commandInstruction.commandArguments);
     ws.send(JSON.stringify({
       payload: {
@@ -108,13 +111,15 @@ export class WebSocketCommandService {
     });
     cmd.on('exit', (code: Number) => {
       try {
+        const sizeInBytes = UploadFileHelper.getTemporaryFileSizeInBytes(compressInstruction.temporaryFileName);
         ws.send(JSON.stringify({
           payload: {
-            exitCode: code.toString(),
-            text: 'child process exited with code ' + code.toString(),
+            compressedSize: sizeInBytes,
           },
-          type: 'processStatus',
+          type: 'compressResult',
         }));
+        // FIXME: Add file to cleanup job so that it is deleted
+
         // close after command is done
         ws.close();
       } catch (error) {

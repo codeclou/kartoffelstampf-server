@@ -24,6 +24,11 @@ export class UploadFileHelper {
     return this.TEMPORARY_FILE_PATH + temporaryFile;
   }
 
+  public static getTemporaryFileSizeInBytes(temporaryFile: string): number {
+    const fileStats = fs.statSync(this.getFullTemporaryFilePath(temporaryFile));
+    return fileStats.size;
+  }
+
   public static isValidTemporaryFileName(temporaryFile: string): boolean {
     if (temporaryFile !== undefined &&
     temporaryFile !== null &&
