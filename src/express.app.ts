@@ -24,8 +24,6 @@ export class Server {
     this.app.set('port', port);
 
     // INIT
-    this.app.set('views', path.join(__dirname, '../views'));
-    this.app.set('view engine', 'pug');
     this.app.use(cors());
     this.app.use(favicon(path.join(__dirname, '../public', 'favicon.ico')));
     this.app.use(logger('dev'));
@@ -52,7 +50,7 @@ export class Server {
 
       // render the error page
       res.status(err.status || 500);
-      res.render('error');
+      res.send(err.message);
     });
   }
 
