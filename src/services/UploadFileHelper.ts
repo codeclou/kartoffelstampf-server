@@ -56,7 +56,12 @@ export class UploadFileHelper {
       // Cleanup Task deletes file after 1 hour
       //
       setTimeout(() => {
-        fs.unlinkSync(this.TEMPORARY_FILE_PATH + fileName);
+        try {
+          fs.unlinkSync(this.TEMPORARY_FILE_PATH + fileName);
+          console.log('deleted uploaded file: ', fileName);
+        } catch (error) {
+          console.log('failed to uploaded file: ', fileName);
+        }
       }, 3600000); // 1h
       // -
       return fileName;
