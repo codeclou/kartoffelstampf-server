@@ -26,6 +26,5 @@ export class DownloadRoute {
         error: 'Invalid temporaryFileName.',
       }));
     }
-
   }
 }

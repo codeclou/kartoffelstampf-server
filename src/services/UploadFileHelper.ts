@@ -11,10 +11,10 @@ export class UploadFileHelper {
 
   // Dockerized environment has the path setup and writable
   private static TEMPORARY_FILE_PATH = '/u/';
-  private static VALID_DATA_URI_REGEX = new RegExp('^data:image/(png|jpeg|jpg);base64,[+/=a-zA-Z0-9]+$');
+  private static VALID_DATA_URI_REGEX = new RegExp('^data:[-a-z]+/[-a-z]+;base64,[+/=a-zA-Z0-9]+$');
   private static VALID_TEMPORARY_FILENAME_REGEX = new RegExp('^[a-zA-Z0-9]+[.][a-z]+$');
 
-  public static ERROR_FILE_TYPE_NOT_ALLOWED = 'file.type.not.allowed';
+  public static ERROR_FILE_TYPE_NOT_ALLOWED = 'File type not supported.';
 
   /**
    * @param temporaryFile e.g. 786790989.png
@@ -52,6 +52,13 @@ export class UploadFileHelper {
       const fileContentAsBinary = Buffer.from(intermediateImage.content, 'base64');
       const fileName = this.randomHash() + intermediateImage.extension;
       fs.writeFileSync(this.TEMPORARY_FILE_PATH + fileName, fileContentAsBinary);
+      //
+      // Cleanup Task deletes file after 1 hour
+      //
+      setTimeout(() => {
+        fs.unlinkSync(this.TEMPORARY_FILE_PATH + fileName);
+      }, 3600000); // 1h
+      // -
       return fileName;
     } else {
       throw new Error(this.ERROR_FILE_TYPE_NOT_ALLOWED);
@@ -64,7 +71,7 @@ export class UploadFileHelper {
   public static isValidBase64DataUri(imageBase64DataUri: string): boolean {
     if (imageBase64DataUri !== undefined &&
         imageBase64DataUri !== null &&
-        imageBase64DataUri.startsWith('data:image/') &&
+        imageBase64DataUri.startsWith('data:') &&
         imageBase64DataUri.match(this.VALID_DATA_URI_REGEX)
     ) {
       return true;

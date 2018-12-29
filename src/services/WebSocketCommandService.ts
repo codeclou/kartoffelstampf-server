@@ -118,8 +118,7 @@ export class WebSocketCommandService {
           },
           type: 'compressResult',
         }));
-        // FIXME: Add file to cleanup job so that it is deleted
-
+        // Cleanup is done in UploadFileHelper => one hour after upload file is deleted
         // close after command is done
         ws.close();
       } catch (error) {

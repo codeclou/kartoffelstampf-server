@@ -23,11 +23,11 @@ export class UploadRoute {
         const fileName = UploadFileHelper.storeFileTemporary(upload.contentDataUri);
         res.send(JSON.stringify({fileName}));
       } catch (error) {
-        res.status(400).send(JSON.stringify({error}));
+        res.status(400).send(JSON.stringify({error: error.message}));
       }
     } else {
       res.status(400).send(JSON.stringify({
-        error: 'Invalid Base64 Data URI',
+        error: 'Invalid Base64 Data URI.',
       }));
     }
   }
