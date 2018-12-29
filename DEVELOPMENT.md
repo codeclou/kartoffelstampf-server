@@ -1,9 +1,17 @@
-### Build
+### Build and Start Locally
 
 ```
-npm install
-npm start
+brew install optipng jpegoptim
+
+sudo mkdir /u
+sudo chmod 777 /u
+
+yarn
+yarn start
 ```
+
+Server started on http://localhost:9999/
+
 
 ### Linting
 

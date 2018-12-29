@@ -147,22 +147,9 @@ The console.log then should show (in a timely manner)
 
 &nbsp;
 
+### Development
 
-### Test
-
-```
-brew install optipng jpegoptim
-
-sudo mkdir /test
-sudo chmod 777 /test
-
-wget -O /test/test.png https://codeclou.github.io/kartoffelstampf-server/test/test.png
-
-yarn
-yarn start
-```
-
-Server started on http://localhost:9999/
+See [DEVELOPMENT.md](./DEVELOPMENT.md).
 
 -----
 
