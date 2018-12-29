@@ -6,9 +6,9 @@
  * https://github.com/codeclou/kartoffelstampf-server
  */
 import * as http from 'http';
-import IExpressError from './error/IExpressError';
-import Server from './express.app';
-import WebSocketCommandService from './services/WebSocketCommandService';
+import { IExpressError } from './error/IExpressError';
+import { Server } from './express.app';
+import { WebSocketCommandService } from './services/WebSocketCommandService';
 
 const onError = (error: IExpressError) => {
   if (error.syscall !== 'listen') {

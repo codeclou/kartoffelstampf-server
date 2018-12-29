@@ -18,6 +18,11 @@ pipelineHelper.nodejsTemplate {
       sh 'yarn'
     }
   }
+  stage('test') {
+    dir('source') {
+      sh 'yarn test'
+    }
+  }
   stage('build') {
     dir('source') {
       sh 'yarn build'

@@ -5,10 +5,9 @@
  */
 import { NextFunction, Request, Response, Router } from 'express';
 import { ImageUploadRequest } from '../data/ImageUploadRequest';
-import * as fs from 'fs';
-import * as crypto from 'crypto';
+import { UploadFileHelper } from '../services/UploadFileHelper';
 
-class UploadRoute {
+export class UploadRoute {
 
   constructor(router: Router) {
     const self = this;
@@ -17,29 +16,19 @@ class UploadRoute {
     });
   }
 
-  private randomHash(): string {
-    const currentDate = (new Date()).valueOf().toString();
-    const random = Math.random().toString();
-    return crypto.createHash('sha256').update(currentDate + random).digest('hex');
-  }
-
-  private extensionFromType(fileType: string) {
-    if (fileType === 'JPG') {
-      return '.jpg';
-    }
-    if (fileType === 'PNG') {
-      return '.png';
-    }
-  }
-
   private upload(req: Request, res: Response, next: NextFunction) {
     const upload = req.body as ImageUploadRequest;
-    const fileContentAsBinary = Buffer.from(upload.fileContent, 'base64');
-    const fileName = this.randomHash() + this.extensionFromType(upload.fileType);
-    fs.writeFileSync('/u/' + fileName, fileContentAsBinary);
-    res.send(JSON.stringify({
-      fileName: fileName
-    }));
+    if (UploadFileHelper.isValidBase64DataUri(upload.contentDataUri)) {
+      try {
+        const fileName = UploadFileHelper.storeFileTemporary(upload.contentDataUri);
+        res.send(JSON.stringify({fileName}));
+      } catch (error) {
+        res.status(400).send(JSON.stringify({error}));
+      }
+    } else {
+      res.status(400).send(JSON.stringify({
+        error: 'Invalid Base64 Data URI',
+      }));
+    }
   }
 }
-export default UploadRoute;

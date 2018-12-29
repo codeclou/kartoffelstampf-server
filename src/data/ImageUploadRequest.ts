@@ -5,7 +5,6 @@
  */
 export class ImageUploadRequest {
 
-  public fileContent: string;
-  public fileType: string;
+  public contentDataUri: string;
 
 }

@@ -10,10 +10,35 @@ import * as winston from 'winston';
 import * as WebSocket from 'ws';
 import { IServerOptions, Server as WsServer } from 'ws';
 import { CommandInstruction } from '../data/CommandInstruction';
+import { CompressInstruction } from '../data/CompressInstruction';
+import { UploadFileHelper } from './UploadFileHelper';
 
-class WebSocketCommandService {
+export class WebSocketCommandService {
 
   private wss: WsServer;
+
+  private compressCommandInstruction(compressInstruction: CompressInstruction): CommandInstruction {
+    const instruction = new CommandInstruction();
+    if (!UploadFileHelper.isValidTemporaryFileName(compressInstruction.temporaryFileName)) {
+      throw Error('Invalid temporaryFileName');
+    }
+    const fullTemporaryFileNamePath = UploadFileHelper.getFullTemporaryFilePath(compressInstruction.temporaryFileName);
+    if (compressInstruction.temporaryFileName.endsWith('.png') &&
+        compressInstruction.compressType === CompressInstruction.COMPRESS_TYPE_LOSSLESS) {
+      instruction.command = 'optipng';
+      instruction.commandArguments.push('-o5');
+      instruction.commandArguments.push(fullTemporaryFileNamePath);
+      return instruction;
+    } else if (compressInstruction.temporaryFileName.endsWith('.jpg') &&
+               compressInstruction.compressType === CompressInstruction.COMPRESS_TYPE_LOSSLESS) {
+      instruction.command = 'jpegoptim';
+      instruction.commandArguments.push('-m80');
+      instruction.commandArguments.push(fullTemporaryFileNamePath);
+      return instruction;
+    } else {
+      throw Error('Invalid compressType');
+    }
+  }
 
   constructor(httpServer: Server) {
     const options: IServerOptions = {
@@ -29,7 +54,9 @@ class WebSocketCommandService {
       const location = url.parse(ws.upgradeReq.url, true);
       ws.on('message', (message) => {
         winston.log('debug', 'received command instruction', message);
-        const commandInstruction = JSON.parse(message);
+        // Interpret which command to execute => Prevent XSS Injects!
+        const compressInstruction = JSON.parse(message) as CompressInstruction;
+        const commandInstruction = this.compressCommandInstruction(compressInstruction);
         self.dispatchCommandWithWebsocketResponse(ws, commandInstruction);
       });
     });
@@ -37,6 +64,12 @@ class WebSocketCommandService {
 
   private dispatchCommandWithWebsocketResponse(ws: WebSocket, commandInstruction: CommandInstruction) {
     const cmd = spawn(commandInstruction.command, commandInstruction.commandArguments);
+    ws.send(JSON.stringify({
+      payload: {
+        text: commandInstruction.command + ' ' + commandInstruction.commandArguments.join(' '),
+      },
+      type: 'cmd',
+    }));
     cmd.on('error', (error: any) => {
       try {
         ws.send(JSON.stringify({
@@ -90,4 +123,3 @@ class WebSocketCommandService {
     });
   }
 }
-export default WebSocketCommandService;

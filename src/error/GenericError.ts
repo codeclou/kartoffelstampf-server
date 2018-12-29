@@ -3,7 +3,6 @@
  * Copyright (c) 2017 Bernhard Grünewaldt
  * https://github.com/codeclou/kartoffelstampf-server
  */
-class GenericError extends Error {
+export class GenericError extends Error {
   public status: Number;
 }
-export default  GenericError;

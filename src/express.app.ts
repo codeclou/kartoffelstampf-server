@@ -11,12 +11,11 @@ import * as logger from 'morgan';
 import * as path from 'path';
 import * as favicon from 'serve-favicon';
 
-import GenericError from './error/GenericError';
-import DownloadRoute from './routes/DownloadRoute';
-import IndexRoute from './routes/IndexRoute';
-import UploadRoute from './routes/UploadRoute';
+import { GenericError } from './error/GenericError';
+import { DownloadRoute } from './routes/DownloadRoute';
+import { UploadRoute } from './routes/UploadRoute';
 
-class Server {
+export class Server {
 
   private app: express.Application;
 
@@ -64,10 +63,8 @@ class Server {
   private routes() {
     let router: express.Router;
     router = express.Router();
-    new IndexRoute(router);
     new UploadRoute(router);
     new DownloadRoute(router);
     this.app.use(router);
   }
 }
-export default Server;
