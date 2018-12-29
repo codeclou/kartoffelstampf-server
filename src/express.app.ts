@@ -7,7 +7,7 @@ import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as express from 'express';
-import * as logger from 'morgan';
+import * as morgan from 'morgan';
 import * as path from 'path';
 import * as favicon from 'serve-favicon';
 
@@ -26,7 +26,7 @@ export class Server {
     // INIT
     this.app.use(cors());
     this.app.use(favicon(path.join(__dirname, '../public', 'favicon.ico')));
-    this.app.use(logger('dev'));
+    this.app.use(morgan('dev'));
     this.app.use(bodyParser.json({limit: '200mb'}));
     this.app.use(bodyParser.urlencoded({ extended: false}));
     this.app.use(cookieParser());

@@ -6,6 +6,7 @@
 import * as crypto from 'crypto';
 import * as fs from 'fs';
 import { IntermediateImage } from '../data/IntermediateImage';
+import { logger } from './LogService';
 
 export class UploadFileHelper {
 
@@ -58,9 +59,9 @@ export class UploadFileHelper {
       setTimeout(() => {
         try {
           fs.unlinkSync(this.TEMPORARY_FILE_PATH + fileName);
-          console.log('deleted uploaded file: ', fileName);
+          logger.log('info', 'deleted uploaded file: ', fileName);
         } catch (error) {
-          console.log('failed to uploaded file: ', fileName);
+          logger.log('info', 'failed to uploaded file: ', fileName);
         }
       }, 3600000); // 1h
       // -

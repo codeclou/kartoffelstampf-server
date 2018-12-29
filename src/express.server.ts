@@ -8,6 +8,7 @@
 import * as http from 'http';
 import { IExpressError } from './error/IExpressError';
 import { Server } from './express.app';
+import { logger } from './services/LogService';
 import { WebSocketCommandService } from './services/WebSocketCommandService';
 
 const onError = (error: IExpressError) => {
@@ -18,11 +19,11 @@ const onError = (error: IExpressError) => {
 
   switch (error.code) {
     case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
+      logger.log('error', bind + ' requires elevated privileges');
       process.exit(1);
       break;
     case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
+      logger.log('error', ' is already in use');
       process.exit(1);
       break;
     default:

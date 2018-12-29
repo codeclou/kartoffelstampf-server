@@ -6,12 +6,12 @@
 import { spawn } from 'child_process';
 import { Server } from 'http';
 import * as url from 'url';
-import * as winston from 'winston';
 import * as WebSocket from 'ws';
 import { IServerOptions, Server as WsServer } from 'ws';
 import { CommandInstruction } from '../data/CommandInstruction';
 import { CompressInstruction } from '../data/CompressInstruction';
 import { UploadFileHelper } from './UploadFileHelper';
+import { logger } from './LogService';
 
 export class WebSocketCommandService {
 
@@ -45,15 +45,15 @@ export class WebSocketCommandService {
       server: httpServer,
     };
     this.wss = new WsServer(options);
+    logger.log('info', 'init logging');
     this.init();
   }
 
   private init() {
     const self = this;
     self.wss.on('connection', (ws: WebSocket) => {
-      const location = url.parse(ws.upgradeReq.url, true);
       ws.on('message', (message) => {
-        winston.log('debug', 'received command instruction', message);
+        logger.log('debug', 'received command instruction', message);
         // Interpret which command to execute => Prevent XSS Injects!
         const compressInstruction = JSON.parse(message) as CompressInstruction;
         const commandInstruction = this.compressCommandInstruction(compressInstruction);
@@ -82,7 +82,7 @@ export class WebSocketCommandService {
           type: 'stderr',
         }));
       } catch (error) {
-        winston.log('debug', 'failed to send ws', error);
+        logger.log('error', 'failed to send ws', error);
       }
     });
     cmd.stdout.on('data', (data: any) => {
@@ -94,7 +94,7 @@ export class WebSocketCommandService {
           type: 'stdout',
         }));
       } catch (error) {
-        winston.log('debug', 'failed to send ws', error);
+        logger.log('error', 'failed to send ws', error);
       }
     });
     cmd.stderr.on('data', (data: any) => {
@@ -106,7 +106,7 @@ export class WebSocketCommandService {
           type: 'stderr',
         }));
       } catch (error) {
-        winston.log('debug', 'failed to send ws', error);
+        logger.log('error', 'failed to send ws', error);
       }
     });
     cmd.on('exit', (code: Number) => {
@@ -122,7 +122,7 @@ export class WebSocketCommandService {
         // close after command is done
         ws.close();
       } catch (error) {
-        winston.log('debug', 'failed to send ws', error);
+        logger.log('error', 'failed to send ws', error);
       }
     });
   }
