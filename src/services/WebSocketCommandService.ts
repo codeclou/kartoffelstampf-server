@@ -10,8 +10,8 @@ import * as WebSocket from 'ws';
 import { IServerOptions, Server as WsServer } from 'ws';
 import { CommandInstruction } from '../data/CommandInstruction';
 import { CompressInstruction } from '../data/CompressInstruction';
-import { UploadFileHelper } from './UploadFileHelper';
 import { logger } from './LogService';
+import { UploadFileHelper } from './UploadFileHelper';
 
 export class WebSocketCommandService {
 
@@ -52,7 +52,7 @@ export class WebSocketCommandService {
   private init() {
     const self = this;
     self.wss.on('connection', (ws: WebSocket) => {
-      ws.on('message', (message) => {
+      ws.on('message', (message: any) => {
         logger.log('debug', 'received command instruction', message);
         // Interpret which command to execute => Prevent XSS Injects!
         const compressInstruction = JSON.parse(message) as CompressInstruction;
@@ -71,6 +71,7 @@ export class WebSocketCommandService {
       payload: {
         text: commandInstruction.command + ' ' + commandInstruction.commandArguments.join(' '),
       },
+      compressInstruction: compressInstruction,
       type: 'cmd',
     }));
     cmd.on('error', (error: any) => {
@@ -79,6 +80,7 @@ export class WebSocketCommandService {
           payload: {
             text: error.toString(),
           },
+          compressInstruction: compressInstruction,
           type: 'stderr',
         }));
       } catch (error) {
@@ -91,6 +93,7 @@ export class WebSocketCommandService {
           payload: {
             text: data.toString(),
           },
+          compressInstruction: compressInstruction,
           type: 'stdout',
         }));
       } catch (error) {
@@ -103,6 +106,7 @@ export class WebSocketCommandService {
           payload: {
             text: data.toString(),
           },
+          compressInstruction: compressInstruction,
           type: 'stderr',
         }));
       } catch (error) {
@@ -116,11 +120,15 @@ export class WebSocketCommandService {
           payload: {
             compressedSize: sizeInBytes,
           },
+          compressInstruction: compressInstruction,
           type: 'compressResult',
         }));
-        // Cleanup is done in UploadFileHelper => one hour after upload file is deleted
-        // close after command is done
-        ws.close();
+        // We unsubscribe on DONE in Frontend
+        ws.send(JSON.stringify({
+          payload: { },
+          compressInstruction: compressInstruction,
+          type: 'DONE',
+        }));
       } catch (error) {
         logger.log('error', 'failed to send ws', error);
       }
