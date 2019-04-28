@@ -7,7 +7,7 @@ pipelineHelper.nodejsTemplate {
   }
   stage('git clone') {
     // branch or tag
-    sh 'git clone --single-branch --branch $GWBT_BRANCH$GWBT_TAG https://${GITHUB_AUTH_TOKEN}@github.com/${GWBT_REPO_FULL_NAME}.git source'
+    sh 'git clone --single-branch --branch $GWBT_BRANCH$GWBT_TAG https://${SECRET_GITHUB_AUTH_TOKEN}@github.com/${GWBT_REPO_FULL_NAME}.git source'
     // reset to revision from webhook
     dir('source') {
       sh 'git reset --hard $GWBT_COMMIT_AFTER'
