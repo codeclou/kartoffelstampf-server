@@ -1,3 +1,7 @@
+:mega: **End of Lifetime Notice**: We no longer provide support for this repository. It will be made readonly, you can still fork it and adapt it to your needs.
+
+----
+
 [![](https://codeclou.github.io/kartoffelstampf/img/kartoffelstampf.svg)](https://github.com/codeclou/kartoffelstampf/)
 
 &nbsp;
